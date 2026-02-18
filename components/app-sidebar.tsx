@@ -1,0 +1,167 @@
+"use client";
+
+import { Home, Users, MessageSquare, Activity, Search, Trophy, LayoutDashboard, Target } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarSeparator,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { useWallet } from "@/lib/wallet-context";
+import { ContributorAvatar } from "@/components/contributor-avatar";
+
+const mainNav = [
+  { title: "Home", url: "/", icon: Home },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Leaderboard", url: "/leaderboard", icon: Trophy },
+  { title: "Quests", url: "/quests", icon: Target },
+];
+
+const communityNav = [
+  { title: "Contributors", url: "/contributors", icon: Users },
+  { title: "Forum", url: "/forum", icon: MessageSquare },
+  { title: "Activity", url: "/activity", icon: Activity },
+  { title: "Search", url: "/search", icon: Search },
+];
+
+const tierLabels: Record<string, string> = {
+  explorer: "Explorer",
+  ambassador: "Ambassador",
+  legend: "Legend",
+};
+
+const tierThresholds: Record<string, { next: string; points: number }> = {
+  explorer: { next: "Ambassador", points: 500 },
+  ambassador: { next: "Legend", points: 2000 },
+};
+
+export function AppSidebar() {
+  const pathname = usePathname();
+  const { user, isConnected } = useWallet();
+  const { setOpenMobile, isMobile } = useSidebar();
+
+  const isActive = (url: string) => {
+    if (url === "/") return pathname === "/";
+    return pathname === url || pathname.startsWith(url + "/");
+  };
+
+  const handleNavClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
+  const progressInfo = user && tierThresholds[user.tier]
+    ? {
+        remaining: Math.max(0, tierThresholds[user.tier].points - user.totalPoints),
+        nextTier: tierThresholds[user.tier].next,
+      }
+    : null;
+
+  return (
+    <Sidebar>
+      <SidebarHeader className="p-4 pb-2">
+        <Link href="/" onClick={handleNavClick}>
+          <div className="flex items-center gap-2 cursor-pointer" data-testid="link-home">
+            <span className="font-display font-bold text-sm uppercase tracking-wider">Insidr</span>
+          </div>
+        </Link>
+      </SidebarHeader>
+      <SidebarContent className="px-2">
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-2 mb-1 text-[10px] uppercase tracking-[0.08em] text-muted-foreground/60 font-semibold flex items-center gap-2">
+            Program
+            <span className="flex items-center gap-1 ml-auto text-[9px] normal-case tracking-normal text-muted-foreground/50">
+              <span className="active-dot shrink-0" />
+              <span className="font-mono">{Math.floor(Math.random() * 4) + 2}</span> active
+            </span>
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {mainNav.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} size="sm">
+                    <Link href={item.url} onClick={handleNavClick} data-testid={`link-nav-${item.title.toLowerCase()}`}>
+                      <item.icon className={`w-3.5 h-3.5 ${isActive(item.url) ? "text-primary" : "text-muted-foreground"}`} />
+                      <span className={`text-[13px] ${isActive(item.url) ? "font-display font-medium" : "font-sans"}`}>
+                        {item.title}
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup className="mt-2">
+          <SidebarGroupLabel className="px-2 mb-1 text-[10px] uppercase tracking-[0.08em] text-muted-foreground/60 font-semibold">
+            Community
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {communityNav.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} size="sm">
+                    <Link href={item.url} onClick={handleNavClick} data-testid={`link-nav-${item.title.toLowerCase()}`}>
+                      <item.icon className={`w-3.5 h-3.5 ${isActive(item.url) ? "text-primary" : "text-muted-foreground"}`} />
+                      <span className={`text-[13px] ${isActive(item.url) ? "font-display font-medium" : "font-sans"}`}>
+                        {item.title}
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {isConnected && user && (
+          <>
+            <SidebarSeparator className="mx-2" />
+            <div className="px-4 py-3">
+              <p className="text-xs uppercase tracking-[0.05em] text-muted-foreground mb-2">
+                {tierLabels[user.tier] || user.tier}
+              </p>
+              <p className="font-mono text-sm font-medium" data-testid="text-sidebar-points">
+                {user.totalPoints.toLocaleString()} pts
+              </p>
+              {progressInfo && progressInfo.remaining > 0 && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  {progressInfo.remaining.toLocaleString()} pts to {progressInfo.nextTier}
+                </p>
+              )}
+            </div>
+          </>
+        )}
+      </SidebarContent>
+      {isConnected && user && (
+        <SidebarFooter className="p-4">
+          <Link href={`/contributors/${user.id}`} onClick={handleNavClick}>
+            <div className="flex items-center gap-3 p-2.5 rounded-md hover-elevate cursor-pointer flex-wrap" data-testid="link-sidebar-profile">
+              <ContributorAvatar user={user} size="md" isActive />
+              <div className="min-w-0 flex-1">
+                <p className={`truncate ${user.tier === "legend" ? "font-display font-semibold text-sm" : "font-sans text-sm"}`}>
+                  {user.username}
+                </p>
+                <p className="text-xs text-muted-foreground" data-testid="text-user-points">
+                  {tierLabels[user.tier] || user.tier}
+                </p>
+              </div>
+            </div>
+          </Link>
+        </SidebarFooter>
+      )}
+    </Sidebar>
+  );
+}
