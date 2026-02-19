@@ -79,12 +79,8 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className="px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="px-2 mb-1 text-[10px] uppercase tracking-[0.08em] text-muted-foreground/60 font-semibold flex items-center gap-2">
+          <SidebarGroupLabel className="px-2 mb-1 text-[10px] uppercase tracking-[0.08em] text-muted-foreground/60 font-semibold">
             Program
-            <span className="flex items-center gap-1 ml-auto text-[9px] normal-case tracking-normal text-muted-foreground/50">
-              <span className="active-dot shrink-0" />
-              <span className="font-mono">{Math.floor(Math.random() * 4) + 2}</span> active
-            </span>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
