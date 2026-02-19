@@ -14,10 +14,10 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useWallet } from "@/lib/wallet-context";
-import { WalletButton } from "@/components/wallet-button";
+import { useAuth } from "@/lib/auth-context";
 import { ContributionTimeline, generateMockWeeklyData } from "@/components/contribution-timeline";
 import type { User, QuestCompletion, Quest, Activity } from "@/shared/schema";
 
@@ -71,8 +71,15 @@ function ActivityTicker({ activities }: { activities: Activity[] }) {
 }
 
 export default function Dashboard() {
-  const { user, isConnected } = useWallet();
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isLoading, isAuthenticated, router]);
 
   const { data: stats } = useQuery<{ totalContributors: number; totalReferrals: number; totalEvents: number; totalContent: number }>({
     queryKey: ["/api/dashboard/stats"],
@@ -80,12 +87,12 @@ export default function Dashboard() {
 
   const { data: myQuests } = useQuery<QuestCompletionWithQuest[]>({
     queryKey: ["/api/quests/my"],
-    enabled: isConnected,
+    enabled: isAuthenticated,
   });
 
   const { data: activities } = useQuery<Activity[]>({
     queryKey: ["/api/activities"],
-    enabled: isConnected,
+    enabled: isAuthenticated,
   });
 
   const copyReferralCode = () => {
@@ -96,17 +103,13 @@ export default function Dashboard() {
     }
   };
 
-  if (!isConnected) {
+  if (isLoading || !isAuthenticated) {
     return (
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto p-8">
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <Target className="w-12 h-12 text-muted-foreground mb-4" />
-            <h2 className="font-display font-semibold text-xl mb-2">Connect to View Your Dashboard</h2>
-            <p className="font-sans text-sm text-muted-foreground mb-8 max-w-md">
-              Connect your wallet to access your contributor dashboard, track KPIs, and monitor your progression.
-            </p>
-            <WalletButton />
+          <div className="flex flex-col items-center justify-center py-20">
+            <Skeleton className="h-8 w-48 mb-4" />
+            <Skeleton className="h-4 w-64" />
           </div>
         </div>
       </div>

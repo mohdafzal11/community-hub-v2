@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { storage } from "@/lib/storage";
+import { stripPasswordHash } from "@/lib/rbac";
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,7 +16,10 @@ export async function GET(request: NextRequest) {
       storage.searchTopics(q),
     ]);
 
-    return NextResponse.json({ members, topics });
+    return NextResponse.json({
+      members: members.map(stripPasswordHash),
+      topics: topics.map((t) => ({ ...t, author: stripPasswordHash(t.author) })),
+    });
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },

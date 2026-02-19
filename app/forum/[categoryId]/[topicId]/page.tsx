@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { useWallet } from "@/lib/wallet-context";
+import { useAuth } from "@/lib/auth-context";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { ForumTopic, ForumReply, User } from "@/shared/schema";
 
@@ -86,7 +86,7 @@ function ReplyCard({
 
 export default function ForumTopicPage() {
   const params = useParams() as { categoryId: string; topicId: string };
-  const { user, isConnected } = useWallet();
+  const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [replyContent, setReplyContent] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
@@ -251,7 +251,7 @@ export default function ForumTopicPage() {
           </Card>
         )}
 
-        {isConnected && (
+        {isAuthenticated && (
           <Card>
             <CardContent className="p-5">
               {replyingTo && (

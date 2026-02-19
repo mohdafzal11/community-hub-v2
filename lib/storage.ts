@@ -26,7 +26,7 @@ import {
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
-  getUserByWallet(walletAddress: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, data: Partial<InsertUser>): Promise<User | undefined>;
   getAllMembers(): Promise<User[]>;
@@ -36,6 +36,8 @@ export interface IStorage {
   getAllCategories(): Promise<ForumCategory[]>;
   getCategory(id: string): Promise<ForumCategory | undefined>;
   createCategory(category: InsertCategory): Promise<ForumCategory>;
+  updateCategory(id: string, data: Partial<InsertCategory>): Promise<ForumCategory | undefined>;
+  deleteCategory(id: string): Promise<void>;
 
   getTopicsByCategory(categoryId: string): Promise<(ForumTopic & { author: User })[]>;
   getTopicsByAuthor(authorId: string): Promise<ForumTopic[]>;
@@ -54,6 +56,8 @@ export interface IStorage {
   getAllQuests(): Promise<Quest[]>;
   getQuest(id: string): Promise<Quest | undefined>;
   createQuest(quest: InsertQuest): Promise<Quest>;
+  updateQuest(id: string, data: Partial<InsertQuest>): Promise<Quest | undefined>;
+  deleteQuest(id: string): Promise<void>;
 
   getUserQuestCompletions(userId: string): Promise<(QuestCompletion & { quest: Quest })[]>;
   startQuest(data: InsertQuestCompletion): Promise<QuestCompletion>;
@@ -69,8 +73,8 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async getUserByWallet(walletAddress: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.walletAddress, walletAddress));
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;
   }
 
@@ -96,7 +100,7 @@ export class DatabaseStorage implements IStorage {
       .where(
         or(
           ilike(users.username, pattern),
-          ilike(users.walletAddress, pattern),
+          ilike(users.email, pattern),
           ilike(users.bio, pattern)
         )
       )
@@ -124,6 +128,20 @@ export class DatabaseStorage implements IStorage {
   async createCategory(category: InsertCategory): Promise<ForumCategory> {
     const [cat] = await db.insert(forumCategories).values(category).returning();
     return cat;
+  }
+
+  async updateCategory(id: string, data: Partial<InsertCategory>): Promise<ForumCategory | undefined> {
+    const [cat] = await db.update(forumCategories).set(data).where(eq(forumCategories.id, id)).returning();
+    return cat;
+  }
+
+  async deleteCategory(id: string): Promise<void> {
+    const topics = await db.select({ id: forumTopics.id }).from(forumTopics).where(eq(forumTopics.categoryId, id));
+    for (const topic of topics) {
+      await db.delete(forumReplies).where(eq(forumReplies.topicId, topic.id));
+    }
+    await db.delete(forumTopics).where(eq(forumTopics.categoryId, id));
+    await db.delete(forumCategories).where(eq(forumCategories.id, id));
   }
 
   async getTopicsByCategory(categoryId: string): Promise<(ForumTopic & { author: User })[]> {
@@ -254,6 +272,16 @@ export class DatabaseStorage implements IStorage {
   async createQuest(quest: InsertQuest): Promise<Quest> {
     const [created] = await db.insert(quests).values(quest).returning();
     return created;
+  }
+
+  async updateQuest(id: string, data: Partial<InsertQuest>): Promise<Quest | undefined> {
+    const [updated] = await db.update(quests).set(data).where(eq(quests.id, id)).returning();
+    return updated;
+  }
+
+  async deleteQuest(id: string): Promise<void> {
+    await db.delete(questCompletions).where(eq(questCompletions.questId, id));
+    await db.delete(quests).where(eq(quests.id, id));
   }
 
   async getUserQuestCompletions(userId: string): Promise<(QuestCompletion & { quest: Quest })[]> {

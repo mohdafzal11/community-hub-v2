@@ -17,8 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useWallet } from "@/lib/wallet-context";
-import { WalletButton } from "@/components/wallet-button";
+import { useAuth } from "@/lib/auth-context";
 import { ContributorAvatar } from "@/components/contributor-avatar";
 import { useQuery } from "@tanstack/react-query";
 import type { User, Activity, ForumCategory, ForumTopic } from "@/shared/schema";
@@ -222,7 +221,7 @@ function AmbientFeedItem({ activity }: { activity: ActivityWithUser }) {
 }
 
 export default function Home() {
-  const { isConnected } = useWallet();
+  const { isAuthenticated } = useAuth();
   const [feedTab, setFeedTab] = useState<"newest" | "trending">("newest");
 
   const { data: members } = useQuery<User[]>({
@@ -274,17 +273,24 @@ export default function Home() {
             </Button>
           </div>
 
-          {!isConnected && (
+          {!isAuthenticated && (
             <Card className="mb-6 border-0 shadow-none" data-testid="welcome-card">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between gap-4 flex-wrap">
                   <div>
                     <h2 className="font-display font-semibold text-lg" data-testid="text-welcome-heading">Welcome to Insidr</h2>
                     <p className="font-sans text-sm text-muted-foreground mt-1">
-                      Connect your wallet to join the contributor program, track KPIs, and level up your tier.
+                      Sign up or login to join the contributor program, track KPIs, and level up your tier.
                     </p>
                   </div>
-                  <WalletButton />
+                  <div className="flex items-center gap-2">
+                    <Link href="/login">
+                      <Button variant="outline" data-testid="button-welcome-login">Login</Button>
+                    </Link>
+                    <Link href="/signup">
+                      <Button data-testid="button-welcome-signup">Sign Up</Button>
+                    </Link>
+                  </div>
                 </div>
               </CardContent>
             </Card>

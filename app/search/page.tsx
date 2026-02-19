@@ -11,8 +11,10 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { User, ForumTopic } from "@/shared/schema";
 
-function truncateAddress(addr: string) {
-  return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+function maskEmail(email: string): string {
+  const [local, domain] = email.split("@");
+  if (!domain) return email;
+  return `${local[0]}***@${domain}`;
 }
 
 export default function SearchPage() {
@@ -51,7 +53,7 @@ export default function SearchPage() {
             <Search className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
             <h3 className="font-display font-semibold mb-1">Search the community</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Find contributors by name, wallet, or skills. Search forum topics and discussions.
+              Find contributors by name or skills. Search forum topics and discussions.
             </p>
           </div>
         ) : isLoading ? (
@@ -96,7 +98,7 @@ export default function SearchPage() {
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-sm">{member.username}</p>
                               <p className="text-xs text-muted-foreground font-mono">
-                                {truncateAddress(member.walletAddress)}
+                                {maskEmail(member.email)}
                               </p>
                             </div>
                             <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -157,7 +159,7 @@ export default function SearchPage() {
                             <div className="flex-1 min-w-0">
                               <p className="font-display font-semibold text-sm">{member.username}</p>
                               <p className="text-xs text-muted-foreground font-mono">
-                                {truncateAddress(member.walletAddress)}
+                                {maskEmail(member.email)}
                               </p>
                             </div>
                             <div className="flex gap-1.5 shrink-0 flex-wrap">

@@ -1,8 +1,11 @@
 import { db } from "../lib/db";
 import { users, forumCategories, forumTopics, forumReplies, activities, quests, questCompletions } from "../shared/schema";
 import { eq, sql } from "drizzle-orm";
+import bcrypt from "bcryptjs";
 
 export async function seed() {
+  // All seed users have password "password123"
+  const passwordHash = await bcrypt.hash("password123", 10);
   const existingUsers = await db.select().from(users).limit(1);
 
   if (process.env.CLEAR_DB === "true") {
@@ -24,7 +27,8 @@ export async function seed() {
     .values([
       {
         id: "aa9c6919-a4ff-4fcc-acbf-aea76ffbd8e6",
-        walletAddress: "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD45",
+        email: "arjun@example.com",
+        passwordHash,
         username: "Arjun Mehta",
         avatarUrl: "/images/avatar-arjun.jpg",
         bio: "Regional Lead for Western India. Scaling Web3 communities across Maharashtra and Gujarat.",
@@ -35,7 +39,7 @@ export async function seed() {
         telegramHandle: "arjun_m",
         isOnboarded: true,
         tier: "legend",
-        role: "regional_lead",
+        role: "admin",
         region: "Maharashtra",
         city: "Mumbai",
         referralCode: "ARJUN2026",
@@ -50,7 +54,8 @@ export async function seed() {
       },
       {
         id: "ce5f5fb7-f27f-4019-bdce-eb7be7f95efb",
-        walletAddress: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
+        email: "priya@example.com",
+        passwordHash,
         username: "Priya Sharma",
         avatarUrl: "/images/avatar-priya.jpg",
         bio: "Web3 Educator and Growth Specialist. Focused on onboarding students to Web3.",
@@ -61,7 +66,7 @@ export async function seed() {
         telegramHandle: "priya_s",
         isOnboarded: true,
         tier: "ambassador",
-        role: "contributor",
+        role: "ambassador",
         region: "Maharashtra",
         city: "Pune",
         referralCode: "PRIYA2026",
@@ -76,7 +81,8 @@ export async function seed() {
       },
       {
         id: "59fb043c-df50-45e2-be38-50b9f7856c58",
-        walletAddress: "0xdD2FD4581271e230360230F9337D5c0430Bf44C0",
+        email: "rahul@example.com",
+        passwordHash,
         username: "Rahul Deshmukh",
         avatarUrl: "/images/avatar-rahul.jpg",
         bio: "Full-stack Developer and Solidity enthusiast. Building tools for student DeFi accessibility.",
@@ -102,7 +108,8 @@ export async function seed() {
       },
       {
         id: "e5540944-6b92-42f3-976f-256f7c95d4b9",
-        walletAddress: "0x2546BcD3c84621e976D8185a91A922aE77ECEc30",
+        email: "sneha@example.com",
+        passwordHash,
         username: "Sneha Iyer",
         avatarUrl: "/images/avatar-sneha.jpg",
         bio: "Visual Storyteller and Community Lead. Crafting narratives around blockchain adoption.",
@@ -128,7 +135,8 @@ export async function seed() {
       },
       {
         id: "200a97ac-f7a7-4533-a8e9-b1a933a16892",
-        walletAddress: "0xbDA5747bFD65F08deb54cb465eB87D40e51B197E",
+        email: "vikram@example.com",
+        passwordHash,
         username: "Vikram Kulkarni",
         avatarUrl: "/images/avatar-vikram.jpg",
         bio: "DeFi Analyst and Campus Ambassador. Passionate about institutional research.",
@@ -154,7 +162,8 @@ export async function seed() {
       },
       {
         id: "9df7d8ae-d690-46ac-bfe4-f05bdb67482f",
-        walletAddress: "0x1234567890123456789012345678901234567890",
+        email: "ananya@example.com",
+        passwordHash,
         username: "Ananya Nair",
         avatarUrl: "/images/avatar-ananya.jpg",
         bio: "Ecosystem Builder and Event Strategist. Bridging protocols and student talent.",
@@ -165,7 +174,7 @@ export async function seed() {
         telegramHandle: "ananya_n",
         isOnboarded: true,
         tier: "ambassador",
-        role: "contributor",
+        role: "ambassador",
         region: "Maharashtra",
         city: "Mumbai",
         referralCode: "ANANYA2026",
@@ -180,7 +189,8 @@ export async function seed() {
       },
       {
         id: "fdd5e7bf-3d49-42f4-ac8b-cbc2e3ebafd9",
-        walletAddress: "0x5555567890123456789012345678901234567890",
+        email: "karan@example.com",
+        passwordHash,
         username: "Karan Johar",
         avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
         bio: "Web3 content creator focused on Hindi tutorials. Reaching the next billion users.",
@@ -206,7 +216,8 @@ export async function seed() {
       },
       {
         id: "69b3825e-d03d-4d32-80ea-453528b12cd4",
-        walletAddress: "0x6666567890123456789012345678901234567890",
+        email: "meera@example.com",
+        passwordHash,
         username: "Meera Reddy",
         avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
         bio: "Legendary contributor in Hyderabad. Leading the local developer community.",
@@ -232,7 +243,8 @@ export async function seed() {
       },
       {
         id: "13f62f24-cfae-4a9f-b1d9-6070e06a6fc5",
-        walletAddress: "0x7777567890123456789012345678901234567890",
+        email: "siddharth@example.com",
+        passwordHash,
         username: "Siddharth Jain",
         avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
         bio: "Explorer focused on DAO governance and research.",
@@ -258,7 +270,8 @@ export async function seed() {
       },
       {
         id: "a7868052-2f58-4bd8-9be6-d123e7a97d29",
-        walletAddress: "0x8888567890123456789012345678901234567890",
+        email: "tanvi@example.com",
+        passwordHash,
         username: "Tanvi Gupta",
         avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop",
         bio: "Ambassador bridging the gap between design and Web3.",
@@ -284,7 +297,8 @@ export async function seed() {
       },
       {
         id: "5c635143-0fe3-4cdb-ae6a-85024e5565b6",
-        walletAddress: "0x9999567890123456789012345678901234567890",
+        email: "rohan@example.com",
+        passwordHash,
         username: "Rohan Varma",
         avatarUrl: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop",
         bio: "Explorer running a Web3 club in Kochi.",
@@ -310,7 +324,8 @@ export async function seed() {
       },
       {
         id: "60262115-2f46-40db-9c0f-60472773cb19",
-        walletAddress: "0x0000567890123456789012345678901234567890",
+        email: "ishani@example.com",
+        passwordHash,
         username: "Ishani Bose",
         avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop",
         bio: "Ambassador driving adoption in Kolkata colleges.",

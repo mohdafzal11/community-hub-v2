@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { storage } from "@/lib/storage";
+import { stripPasswordHash } from "@/lib/rbac";
 
 export async function GET(
   _request: NextRequest,
@@ -16,7 +17,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(topic);
+    return NextResponse.json({ ...topic, author: stripPasswordHash(topic.author) });
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },

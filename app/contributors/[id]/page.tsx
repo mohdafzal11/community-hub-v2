@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { useWallet } from "@/lib/wallet-context";
+import { useAuth } from "@/lib/auth-context";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { ContributorAvatar } from "@/components/contributor-avatar";
 import { ContributionTimeline, generateMockWeeklyData } from "@/components/contribution-timeline";
@@ -43,8 +43,17 @@ const tierLabels: Record<string, string> = {
   regional_lead: "Regional Lead",
 };
 
-function truncateAddress(addr: string) {
-  return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+const roleLabels: Record<string, string> = {
+  admin: "Admin",
+  contributor: "Contributor",
+  ambassador: "Ambassador",
+};
+
+function maskEmail(email: string): string {
+  const [local, domain] = email.split("@");
+  if (!domain) return email;
+  const masked = local[0] + "***";
+  return `${masked}@${domain}`;
 }
 
 function formatTimeAgo(date: Date | string) {
@@ -60,7 +69,7 @@ function formatTimeAgo(date: Date | string) {
 
 export default function ContributorProfile() {
   const params = useParams() as { id: string };
-  const { user: currentUser } = useWallet();
+  const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -102,9 +111,9 @@ export default function ContributorProfile() {
     },
   });
 
-  const copyAddress = () => {
+  const copyEmail = () => {
     if (member) {
-      navigator.clipboard.writeText(member.walletAddress);
+      navigator.clipboard.writeText(member.email);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -208,11 +217,12 @@ export default function ContributorProfile() {
               >
                 {tierLabels[member.tier] || member.tier}
               </span>
-              {member.role === "regional_lead" && (
-                <span className="text-xs font-sans uppercase tracking-[0.05em] text-muted-foreground border border-border px-2 py-0.5 rounded-[6px]">
-                  Regional Lead
-                </span>
-              )}
+              <span
+                className="text-xs font-sans uppercase tracking-[0.05em] text-muted-foreground border border-border px-2 py-0.5 rounded-[6px]"
+                data-testid="badge-role"
+              >
+                {roleLabels[member.role] || member.role}
+              </span>
               {isOwnProfile && (
                 <Dialog open={editOpen} onOpenChange={setEditOpen}>
                   <DialogTrigger asChild>
@@ -332,11 +342,11 @@ export default function ContributorProfile() {
             )}
 
             <button
-              onClick={copyAddress}
+              onClick={copyEmail}
               className="flex items-center gap-2 mt-3 font-mono text-xs text-muted-foreground hover-elevate rounded-md px-1.5 py-0.5 -ml-1.5"
-              data-testid="button-copy-address"
+              data-testid="button-copy-email"
             >
-              {truncateAddress(member.walletAddress)}
+              {isOwnProfile ? member.email : maskEmail(member.email)}
               {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
             </button>
           </div>

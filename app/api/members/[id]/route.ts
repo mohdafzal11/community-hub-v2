@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/session";
 import { storage } from "@/lib/storage";
+import { stripPasswordHash } from "@/lib/rbac";
 
 const updateProfileSchema = z.object({
   username: z.string().min(1).max(100).optional(),
@@ -31,7 +32,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json(stripPasswordHash(user));
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },
@@ -80,7 +81,7 @@ export async function PATCH(
       metadata: { updatedFields: Object.keys(parsed.data) },
     });
 
-    return NextResponse.json(user);
+    return NextResponse.json(stripPasswordHash(user));
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 import { storage } from "@/lib/storage";
+import { stripPasswordHash } from "@/lib/rbac";
 
 export async function GET() {
   try {
@@ -22,7 +23,7 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({ user });
+    return NextResponse.json({ user: stripPasswordHash(user) });
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },

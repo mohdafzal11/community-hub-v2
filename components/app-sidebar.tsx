@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Users, MessageSquare, Activity, Search, Trophy, LayoutDashboard, Target } from "lucide-react";
+import { Home, Users, MessageSquare, Activity, Search, Trophy, LayoutDashboard, Target, LogOut, LogIn } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -17,7 +17,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useWallet } from "@/lib/wallet-context";
+import { useAuth } from "@/lib/auth-context";
 import { ContributorAvatar } from "@/components/contributor-avatar";
 
 const mainNav = [
@@ -47,7 +47,7 @@ const tierThresholds: Record<string, { next: string; points: number }> = {
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { user, isConnected } = useWallet();
+  const { user, isAuthenticated, logout } = useAuth();
   const { setOpenMobile, isMobile } = useSidebar();
 
   const isActive = (url: string) => {
@@ -126,7 +126,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {isConnected && user && (
+        {isAuthenticated && user && (
           <>
             <SidebarSeparator className="mx-2" />
             <div className="px-4 py-3">
@@ -145,23 +145,40 @@ export function AppSidebar() {
           </>
         )}
       </SidebarContent>
-      {isConnected && user && (
-        <SidebarFooter className="p-4">
-          <Link href={`/contributors/${user.id}`} onClick={handleNavClick}>
-            <div className="flex items-center gap-3 p-2.5 rounded-md hover-elevate cursor-pointer flex-wrap" data-testid="link-sidebar-profile">
-              <ContributorAvatar user={user} size="md" isActive />
-              <div className="min-w-0 flex-1">
-                <p className={`truncate ${user.tier === "legend" ? "font-display font-semibold text-sm" : "font-sans text-sm"}`}>
-                  {user.username}
-                </p>
-                <p className="text-xs text-muted-foreground" data-testid="text-user-points">
-                  {tierLabels[user.tier] || user.tier}
-                </p>
+      <SidebarFooter className="p-4">
+        {isAuthenticated && user ? (
+          <>
+            <Link href={`/contributors/${user.id}`} onClick={handleNavClick}>
+              <div className="flex items-center gap-3 p-2.5 rounded-md hover-elevate cursor-pointer flex-wrap" data-testid="link-sidebar-profile">
+                <ContributorAvatar user={user} size="md" isActive />
+                <div className="min-w-0 flex-1">
+                  <p className={`truncate ${user.tier === "legend" ? "font-display font-semibold text-sm" : "font-sans text-sm"}`}>
+                    {user.username}
+                  </p>
+                  <p className="text-xs text-muted-foreground" data-testid="text-user-points">
+                    {tierLabels[user.tier] || user.tier}
+                  </p>
+                </div>
               </div>
+            </Link>
+            <button
+              onClick={() => { logout(); handleNavClick(); }}
+              className="flex items-center gap-2 w-full p-2.5 rounded-md text-sm text-muted-foreground hover:text-destructive hover:bg-muted transition-colors cursor-pointer"
+              data-testid="button-sidebar-logout"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Logout</span>
+            </button>
+          </>
+        ) : (
+          <Link href="/login" onClick={handleNavClick}>
+            <div className="flex items-center gap-2 p-2.5 rounded-md hover-elevate cursor-pointer text-sm" data-testid="link-sidebar-login">
+              <LogIn className="w-3.5 h-3.5 text-muted-foreground" />
+              <span>Login</span>
             </div>
           </Link>
-        </SidebarFooter>
-      )}
+        )}
+      </SidebarFooter>
     </Sidebar>
   );
 }

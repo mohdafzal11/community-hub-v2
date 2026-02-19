@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { useWallet } from "@/lib/wallet-context";
+import { useAuth } from "@/lib/auth-context";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { ForumCategory, ForumTopic, User } from "@/shared/schema";
 
@@ -46,7 +46,7 @@ function formatTimeAgo(date: Date | string) {
 
 export default function ForumCategoryPage() {
   const params = useParams() as { categoryId: string };
-  const { user, isConnected } = useWallet();
+  const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [newTopicOpen, setNewTopicOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -97,7 +97,7 @@ export default function ForumCategoryPage() {
               <p className="text-sm text-muted-foreground mt-1">{category.description}</p>
             )}
           </div>
-          {isConnected && (
+          {isAuthenticated && (
             <Dialog open={newTopicOpen} onOpenChange={setNewTopicOpen}>
               <DialogTrigger asChild>
                 <Button size="sm" className="gap-1.5" data-testid="button-new-topic">
@@ -159,7 +159,7 @@ export default function ForumCategoryPage() {
             <MessageSquare className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
             <h3 className="font-semibold mb-1">No topics yet</h3>
             <p className="text-sm text-muted-foreground">
-              {isConnected ? "Be the first to start a discussion!" : "Connect your wallet to start a discussion."}
+              {isAuthenticated ? "Be the first to start a discussion!" : "Login to start a discussion."}
             </p>
           </div>
         ) : (
