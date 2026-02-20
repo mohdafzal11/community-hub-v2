@@ -115,7 +115,7 @@ function BigFeedItem({ activity }: { activity: ActivityWithUser }) {
                 <img
                   src={meta.imageUrl}
                   alt={meta?.eventName || "Event"}
-                  className="w-full h-48 object-cover"
+                  className="w-full aspect-video object-cover"
                 />
               </div>
             )}
@@ -178,7 +178,7 @@ function NotableFeedItem({ activity }: { activity: ActivityWithUser }) {
                 <img
                   src={meta.imageUrl}
                   alt={meta?.eventName || "Event"}
-                  className="w-full h-40 object-cover"
+                  className="w-full aspect-video object-cover"
                 />
               </div>
             )}
@@ -331,7 +331,7 @@ export default function Home() {
                     <Card className={`border-0 shadow-none rounded-[10px] overflow-hidden ${topicId ? "group hover-elevate cursor-pointer" : ""}`} data-testid={`card-event-${event.id}`}>
                       <CardContent className="p-0">
                         {imageUrl && (
-                          <div className="w-full h-36 overflow-hidden bg-muted" data-testid={`img-event-${event.id}`}>
+                          <div className="w-full aspect-video overflow-hidden bg-muted" data-testid={`img-event-${event.id}`}>
                             <img
                               src={imageUrl}
                               alt={meta?.eventName}
