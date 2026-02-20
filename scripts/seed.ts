@@ -38,7 +38,7 @@ export async function seed() {
         xHandle: "arjun_web3",
         telegramHandle: "arjun_m",
         isOnboarded: true,
-        tier: "legend",
+        tier: "fellow",
         role: "admin",
         region: "Maharashtra",
         city: "Mumbai",
@@ -92,7 +92,7 @@ export async function seed() {
         xHandle: "rahul_codes",
         telegramHandle: "rahul_d",
         isOnboarded: true,
-        tier: "explorer",
+        tier: "contributor",
         role: "contributor",
         region: "Maharashtra",
         city: "Mumbai",
@@ -119,7 +119,7 @@ export async function seed() {
         xHandle: "sneha_stories",
         telegramHandle: "sneha_i",
         isOnboarded: true,
-        tier: "legend",
+        tier: "fellow",
         role: "contributor",
         region: "Maharashtra",
         city: "Mumbai",
@@ -146,7 +146,7 @@ export async function seed() {
         xHandle: "vikram_defi",
         telegramHandle: "vikram_k",
         isOnboarded: true,
-        tier: "explorer",
+        tier: "contributor",
         role: "contributor",
         region: "Karnataka",
         city: "Bangalore",
@@ -227,7 +227,7 @@ export async function seed() {
         xHandle: "meera_codes",
         telegramHandle: "meera_r",
         isOnboarded: true,
-        tier: "legend",
+        tier: "fellow",
         role: "contributor",
         region: "Telangana",
         city: "Hyderabad",
@@ -254,7 +254,7 @@ export async function seed() {
         xHandle: "sid_dao",
         telegramHandle: "sid_j",
         isOnboarded: true,
-        tier: "explorer",
+        tier: "contributor",
         role: "contributor",
         region: "Rajasthan",
         city: "Jaipur",
@@ -308,7 +308,7 @@ export async function seed() {
         xHandle: "rohan_web3",
         telegramHandle: "rohan_v",
         isOnboarded: true,
-        tier: "explorer",
+        tier: "contributor",
         role: "contributor",
         region: "Kerala",
         city: "Kochi",
@@ -436,7 +436,7 @@ export async function seed() {
   ]);
 
   const activityData: Array<{ type: string; userId: string; metadata: Record<string, unknown> }> = seedUsers.map(u => ({ type: "new_contributor", userId: u.id, metadata: { username: u.username, tier: u.tier } }));
-  activityData.push({ type: "tier_up", userId: seedUsers[0].id, metadata: { username: seedUsers[0].username, newTier: "legend" } });
+  activityData.push({ type: "tier_up", userId: seedUsers[0].id, metadata: { username: seedUsers[0].username, newTier: "fellow" } });
   activityData.push({ type: "quest_completed", userId: seedUsers[0].id, metadata: { username: seedUsers[0].username, questTitle: "Referral Champion" } });
   activityData.push({ type: "event_organized", userId: seedUsers[0].id, metadata: { username: seedUsers[0].username, eventName: "IIT Bombay Workshop", topicId: seedTopics[5].id, imageUrl: "/images/event-tech-workshop_1.jpg", contentPreview: "Amazing turnout today! Over 80 students joined our intro to Web3 workshop at IIT Bombay. The energy was incredible." } });
   activityData.push({ type: "event_organized", userId: seedUsers[5].id, metadata: { username: seedUsers[5].username, eventName: "ETH Mumbai Hackathon", topicId: seedTopics[6].id, imageUrl: "/images/event-tech-workshop_2.jpg", contentPreview: "Our team placed 2nd at ETH Mumbai! Huge thanks to the organizers for such a smooth event. See you at the next one!" } });

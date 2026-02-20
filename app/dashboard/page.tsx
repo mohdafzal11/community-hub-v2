@@ -24,12 +24,12 @@ import type { User, QuestCompletion, Quest, Activity } from "@/shared/schema";
 type QuestCompletionWithQuest = QuestCompletion & { quest: Quest };
 
 const tierConfig: Record<string, { label: string; next: string | null; requiredReferrals: number; requiredEvents: number }> = {
-  explorer: { label: "Explorer", next: "ambassador", requiredReferrals: 150, requiredEvents: 1 },
-  ambassador: { label: "Ambassador", next: "legend", requiredReferrals: 700, requiredEvents: 6 },
-  legend: { label: "Legend", next: null, requiredReferrals: 1000, requiredEvents: 10 },
+  contributor: { label: "Contributor", next: "ambassador", requiredReferrals: 150, requiredEvents: 1 },
+  ambassador: { label: "Ambassador", next: "fellow", requiredReferrals: 700, requiredEvents: 6 },
+  fellow: { label: "Fellow", next: null, requiredReferrals: 1000, requiredEvents: 10 },
 };
 
-const tierOrder = ["explorer", "ambassador", "legend"];
+const tierOrder = ["contributor", "ambassador", "fellow"];
 
 function ActivityTicker({ activities }: { activities: Activity[] }) {
   const [index, setIndex] = useState(0);
@@ -116,8 +116,8 @@ export default function Dashboard() {
     );
   }
 
-  const currentTier = tierConfig[user?.tier ?? "explorer"];
-  const currentTierIndex = tierOrder.indexOf(user?.tier ?? "explorer");
+  const currentTier = tierConfig[user?.tier ?? "contributor"];
+  const currentTierIndex = tierOrder.indexOf(user?.tier ?? "contributor");
   const nextTier = currentTier?.next ? tierConfig[currentTier.next] : null;
   const referralProgress = nextTier ? Math.min(100, ((user?.referralsCount ?? 0) / nextTier.requiredReferrals) * 100) : 100;
   const eventProgress = nextTier ? Math.min(100, ((user?.eventsCount ?? 0) / nextTier.requiredEvents) * 100) : 100;

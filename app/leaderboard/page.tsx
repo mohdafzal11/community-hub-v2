@@ -12,9 +12,9 @@ import { ContributorTooltip } from "@/components/contributor-tooltip";
 import type { User } from "@/shared/schema";
 
 const tierLabels: Record<string, string> = {
-  explorer: "Explorer",
+  contributor: "Contributor",
   ambassador: "Ambassador",
-  legend: "Legend",
+  fellow: "Fellow",
 };
 
 const sortOptions = [
@@ -54,12 +54,12 @@ export default function Leaderboard() {
 
   const getBadgeClass = (tier: string) => {
     const base = "text-xs font-sans uppercase tracking-[0.05em]";
-    if (tier === "legend") return `${base} font-medium text-foreground`;
+    if (tier === "fellow") return `${base} font-medium text-foreground`;
     return `${base} text-muted-foreground`;
   };
 
   const getNameClass = (tier: string) => {
-    if (tier === "legend") return "font-display font-semibold text-sm";
+    if (tier === "fellow") return "font-display font-semibold text-sm";
     if (tier === "ambassador") return "font-display font-medium text-sm";
     return "font-sans text-sm";
   };

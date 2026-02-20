@@ -16,7 +16,7 @@ export const users = pgTable("users", {
   farcasterHandle: text("farcaster_handle").default(""),
   xHandle: text("x_handle").default(""),
   isOnboarded: boolean("is_onboarded").default(false),
-  tier: text("tier").default("explorer").notNull(),
+  tier: text("tier").default("contributor").notNull(),
   role: text("role").default("contributor").notNull(),
   region: text("region").default(""),
   city: text("city").default(""),

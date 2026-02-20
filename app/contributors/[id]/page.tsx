@@ -37,9 +37,9 @@ import type { User, ForumTopic, Activity } from "@/shared/schema";
 import { FaXTwitter } from "react-icons/fa6";
 
 const tierLabels: Record<string, string> = {
-  explorer: "Explorer",
+  contributor: "Contributor",
   ambassador: "Ambassador",
-  legend: "Legend",
+  fellow: "Fellow",
   regional_lead: "Regional Lead",
 };
 

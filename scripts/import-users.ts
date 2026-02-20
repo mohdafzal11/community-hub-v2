@@ -255,7 +255,7 @@ async function importUsers() {
         telegramHandle: u.telegram.replace(/^@/, ""),
         xHandle: u.x.replace(/^@/, ""),
         isOnboarded: false,
-        tier: "explorer",
+        tier: "contributor",
         role: "contributor",
         region: getRegion(u.city),
         city: u.city,
@@ -268,7 +268,7 @@ async function importUsers() {
     await db.insert(activities).values({
       type: "new_contributor",
       userId: created.id,
-      metadata: { username: created.username, tier: "explorer" },
+      metadata: { username: created.username, tier: "contributor" },
     });
 
     credentials.push({ email: u.email.toLowerCase(), password, name: u.name });

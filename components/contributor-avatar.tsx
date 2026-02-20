@@ -38,7 +38,7 @@ export function ContributorAvatar({
 }: ContributorAvatarProps) {
   const avatarSize = isTopThree ? topThreeSizeMap[size] : sizeMap[size];
   const tierClass =
-    user.tier === "legend"
+    user.tier === "fellow"
       ? "ring-2 ring-foreground/20"
       : "";
 

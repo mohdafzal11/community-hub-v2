@@ -14,21 +14,21 @@ import { ContributorTooltip } from "@/components/contributor-tooltip";
 import type { User } from "@/shared/schema";
 
 const tierLabels: Record<string, string> = {
-  explorer: "Explorer",
+  contributor: "Contributor",
   ambassador: "Ambassador",
-  legend: "Legend",
+  fellow: "Fellow",
 };
 
 const tierFilters = [
   { value: "all", label: "All" },
-  { value: "explorer", label: "Explorer" },
+  { value: "contributor", label: "Contributor" },
   { value: "ambassador", label: "Ambassador" },
-  { value: "legend", label: "Legend" },
+  { value: "fellow", label: "Fellow" },
 ];
 
 function getNameClasses(tier: string): string {
   switch (tier) {
-    case "legend":
+    case "fellow":
       return "font-display font-semibold text-sm";
     case "ambassador":
       return "font-display font-medium text-sm";

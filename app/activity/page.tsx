@@ -65,13 +65,13 @@ function formatTimeAgo(date: Date | string) {
 }
 
 function getTierTypography(tier: string) {
-  if (tier === "legend") return "font-display font-semibold";
+  if (tier === "fellow") return "font-display font-semibold";
   if (tier === "ambassador") return "font-display font-medium";
   return "font-sans";
 }
 
 function getAvatarRingClass(tier: string) {
-  if (tier === "legend") return "ring-2 ring-foreground";
+  if (tier === "fellow") return "ring-2 ring-foreground";
   return "";
 }
 
@@ -225,7 +225,7 @@ function AmbientGroup({ type, activities }: { type: string; activities: Activity
       <Icon className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
       <div className="flex items-center">
         {visibleAvatars.map((a, i) => {
-          const ringClass = getAvatarRingClass(a.user?.tier ?? "explorer");
+          const ringClass = getAvatarRingClass(a.user?.tier ?? "contributor");
           return (
             <div
               key={a.id}

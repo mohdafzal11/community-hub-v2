@@ -65,13 +65,13 @@ const BIG_TYPES = new Set(["tier_up"]);
 const NOTABLE_TYPES = new Set(["quest_completed", "referral_milestone", "event_organized"]);
 
 function getTierNameClass(tier: string) {
-  if (tier === "legend") return "font-display font-semibold";
+  if (tier === "fellow") return "font-display font-semibold";
   if (tier === "ambassador") return "font-display font-medium";
   return "font-sans";
 }
 
 function getTierAvatarClass(tier: string) {
-  if (tier === "legend") return "ring-2 ring-foreground/20";
+  if (tier === "fellow") return "ring-2 ring-foreground/20";
   return "";
 }
 

@@ -35,14 +35,14 @@ const communityNav = [
 ];
 
 const tierLabels: Record<string, string> = {
-  explorer: "Explorer",
+  contributor: "Contributor",
   ambassador: "Ambassador",
-  legend: "Legend",
+  fellow: "Fellow",
 };
 
 const tierThresholds: Record<string, { next: string; points: number }> = {
-  explorer: { next: "Ambassador", points: 500 },
-  ambassador: { next: "Legend", points: 2000 },
+  contributor: { next: "Ambassador", points: 500 },
+  ambassador: { next: "Fellow", points: 2000 },
 };
 
 export function AppSidebar() {
@@ -148,7 +148,7 @@ export function AppSidebar() {
               <div className="flex items-center gap-3 p-2.5 rounded-md hover-elevate cursor-pointer flex-wrap" data-testid="link-sidebar-profile">
                 <ContributorAvatar user={user} size="md" isActive />
                 <div className="min-w-0 flex-1">
-                  <p className={`truncate ${user.tier === "legend" ? "font-display font-semibold text-sm" : "font-sans text-sm"}`}>
+                  <p className={`truncate ${user.tier === "fellow" ? "font-display font-semibold text-sm" : "font-sans text-sm"}`}>
                     {user.username}
                   </p>
                   <p className="text-xs text-muted-foreground" data-testid="text-user-points">
