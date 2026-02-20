@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Activity, UserPlus, MessageSquare, Reply, Edit, Award, Target, TrendingUp, Trophy } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ContributorAvatar } from "@/components/contributor-avatar";
 import type { Activity as ActivityType, User } from "@/shared/schema";
@@ -225,19 +225,15 @@ function AmbientGroup({ type, activities }: { type: string; activities: Activity
       <Icon className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
       <div className="flex items-center">
         {visibleAvatars.map((a, i) => {
-          const initials = a.user?.username?.slice(0, 2).toUpperCase() ?? "??";
           const ringClass = getAvatarRingClass(a.user?.tier ?? "explorer");
           return (
-            <Avatar
+            <div
               key={a.id}
-              className={`w-5 h-5 rounded-full ${ringClass} ${i > 0 ? "-ml-2" : ""}`}
+              className={`w-5 h-5 rounded-full overflow-hidden ${ringClass} ${i > 0 ? "-ml-2" : ""}`}
               data-testid={`activity-item-${a.id}`}
             >
-              {a.user?.avatarUrl && <AvatarImage src={a.user.avatarUrl} alt={a.user.username} />}
-              <AvatarFallback className="text-[8px] font-medium">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+              <img src={getAvatarUrl(a.user?.username || "Anonymous")} alt={a.user?.username || "Anonymous"} className="w-full h-full object-cover" />
+            </div>
           );
         })}
       </div>
