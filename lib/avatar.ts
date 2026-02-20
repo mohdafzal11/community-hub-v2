@@ -1,13 +1,4 @@
-import { createAvatar } from "@dicebear/core";
-import { notionistsNeutral } from "@dicebear/collection";
-
-const cache = new Map<string, string>();
-
 export function getAvatarUrl(name: string): string {
-  const key = name || "Anonymous";
-  if (cache.has(key)) return cache.get(key)!;
-  const avatar = createAvatar(notionistsNeutral, { seed: key });
-  const uri = avatar.toDataUri();
-  cache.set(key, uri);
-  return uri;
+  const seed = encodeURIComponent(name || "Anonymous");
+  return `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
 }
