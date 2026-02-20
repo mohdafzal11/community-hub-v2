@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -170,12 +170,9 @@ export default function ForumCategoryPage() {
                   {i > 0 && <div className="px-3"><Separator /></div>}
                   <Link href={`/forum/${params.categoryId}/${topic.id}`}>
                     <div className="flex items-start gap-3.5 py-4 px-3 rounded-md hover-elevate cursor-pointer" data-testid={`card-topic-${topic.id}`}>
-                      <Avatar className="w-9 h-9 mt-0.5">
-                        {topic.author?.avatarUrl && <AvatarImage src={topic.author.avatarUrl} alt={topic.author.username} />}
-                        <AvatarFallback className="text-xs">
-                          {topic.author?.username?.slice(0, 2).toUpperCase() ?? "??"}
-                        </AvatarFallback>
-                      </Avatar>
+                      <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 mt-0.5">
+                        <img src={getAvatarUrl(topic.author?.username || "Anonymous")} alt={topic.author?.username || "Anonymous"} className="w-full h-full object-cover" />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           {topic.isPinned && <Pin className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}

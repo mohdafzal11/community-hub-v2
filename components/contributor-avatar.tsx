@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 import type { User } from "@/shared/schema";
 
 interface ContributorAvatarProps {
@@ -28,14 +28,6 @@ const topThreeSizeMap = {
   xl: "w-24 h-24",
 };
 
-const textSizeMap = {
-  xs: "text-[6px]",
-  sm: "text-[8px]",
-  md: "text-xs",
-  lg: "text-sm",
-  xl: "text-xl",
-};
-
 export function ContributorAvatar({
   user,
   size = "md",
@@ -44,7 +36,6 @@ export function ContributorAvatar({
   isTopThree = false,
   className = "",
 }: ContributorAvatarProps) {
-  const initials = user.username?.slice(0, 2).toUpperCase() ?? "??";
   const avatarSize = isTopThree ? topThreeSizeMap[size] : sizeMap[size];
   const tierClass =
     user.tier === "legend"
@@ -53,16 +44,15 @@ export function ContributorAvatar({
 
   return (
     <div className={`relative inline-flex ${className}`}>
-      <Avatar
-        className={`${avatarSize} ${tierClass} ${hasStreak ? "streak-ring" : ""}`}
+      <div
+        className={`${avatarSize} ${tierClass} ${hasStreak ? "streak-ring" : ""} rounded-full overflow-hidden shrink-0 relative after:content-[''] after:block after:absolute after:inset-0 after:rounded-full after:pointer-events-none after:border after:border-black/10 dark:after:border-white/10`}
       >
-        {user.avatarUrl && (
-          <AvatarImage src={user.avatarUrl} alt={user.username} />
-        )}
-        <AvatarFallback className={textSizeMap[size]}>
-          {initials}
-        </AvatarFallback>
-      </Avatar>
+        <img
+          src={getAvatarUrl(user.username || "Anonymous")}
+          alt={user.username}
+          className="w-full h-full object-cover"
+        />
+      </div>
       {isActive && <span className="active-dot" />}
     </div>
   );

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { MessageSquare, Plus, Pencil, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,24 +33,17 @@ import { useToast } from "@/hooks/use-toast";
 import type { ForumCategory } from "@/shared/schema";
 
 function ContributorAvatars({ name }: { name: string }) {
-  const letters = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
-  const fallbacks = [
-    letters.slice(0, 2),
-    letters.slice(1, 3) || letters.slice(0, 1),
-    letters.length > 2 ? letters.slice(2, 4) || letters.slice(0, 2) : letters.slice(0, 1),
-  ];
+  const variants = [`${name}-1`, `${name}-2`, `${name}-3`];
 
   return (
     <div className="flex items-center">
-      {fallbacks.map((fb, i) => (
-        <Avatar
+      {variants.map((n, i) => (
+        <div
           key={i}
-          className={`w-5 h-5 border-2 border-card bg-muted ${i > 0 ? "-ml-1.5" : ""}`}
+          className={`w-5 h-5 rounded-full overflow-hidden border-2 border-card ${i > 0 ? "-ml-1.5" : ""}`}
         >
-          <AvatarFallback className="text-[8px] font-medium text-muted-foreground bg-muted">
-            {fb}
-          </AvatarFallback>
-        </Avatar>
+          <img src={getAvatarUrl(n)} alt={n} className="w-full h-full object-cover" />
+        </div>
       ))}
     </div>
   );

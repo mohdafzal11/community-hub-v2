@@ -1,10 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme-provider";
 
-export function ThemeToggle() {
+function ThemeToggleInner() {
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -18,3 +19,12 @@ export function ThemeToggle() {
     </Button>
   );
 }
+
+export const ThemeToggle = dynamic(() => Promise.resolve(ThemeToggleInner), {
+  ssr: false,
+  loading: () => (
+    <Button size="icon" variant="ghost" data-testid="button-theme-toggle">
+      <Moon className="w-4 h-4" />
+    </Button>
+  ),
+});

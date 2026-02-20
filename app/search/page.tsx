@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Search, Users, MessageSquare, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { User, ForumTopic } from "@/shared/schema";
@@ -89,12 +89,9 @@ export default function SearchPage() {
                         {i > 0 && <Separator />}
                         <Link href={`/contributors/${member.id}`}>
                           <div className="flex items-center gap-3 p-2.5 rounded-md hover-elevate cursor-pointer" data-testid={`search-member-${member.id}`}>
-                            <Avatar className="w-8 h-8">
-                              {member.avatarUrl && <AvatarImage src={member.avatarUrl} alt={member.username} />}
-                              <AvatarFallback className="text-xs">
-                                {member.username.slice(0, 2).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
+                            <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
+                              <img src={getAvatarUrl(member.username)} alt={member.username} className="w-full h-full object-cover" />
+                            </div>
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-sm">{member.username}</p>
                               <p className="text-xs text-muted-foreground font-mono">
@@ -150,12 +147,9 @@ export default function SearchPage() {
                         {i > 0 && <Separator />}
                         <Link href={`/contributors/${member.id}`}>
                           <div className="flex items-center gap-3 p-2.5 rounded-md hover-elevate cursor-pointer">
-                            <Avatar className="w-8 h-8">
-                              {member.avatarUrl && <AvatarImage src={member.avatarUrl} alt={member.username} />}
-                              <AvatarFallback className="text-xs">
-                                {member.username.slice(0, 2).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
+                            <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
+                              <img src={getAvatarUrl(member.username)} alt={member.username} className="w-full h-full object-cover" />
+                            </div>
                             <div className="flex-1 min-w-0">
                               <p className="font-display font-semibold text-sm">{member.username}</p>
                               <p className="text-xs text-muted-foreground font-mono">

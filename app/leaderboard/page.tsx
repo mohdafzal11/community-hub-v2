@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ContributorAvatar } from "@/components/contributor-avatar";
 import { ContributionTimeline, generateMockWeeklyData } from "@/components/contribution-timeline";
@@ -108,12 +108,9 @@ export default function Leaderboard() {
                   <div className="flex items-center gap-5">
                     <span className="font-mono text-[#FAFAF8]/50 text-sm shrink-0">#1</span>
                     <Link href={`/contributors/${first.id}`}>
-                      <Avatar className="w-14 h-14 rounded-full cursor-pointer shrink-0">
-                        {first.avatarUrl && <AvatarImage src={first.avatarUrl} alt={first.username} />}
-                        <AvatarFallback className="bg-[#FAFAF8]/10 text-[#FAFAF8] text-lg font-semibold">
-                          {first.username.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                      <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 cursor-pointer">
+                        <img src={getAvatarUrl(first.username)} alt={first.username} className="w-full h-full object-cover" />
+                      </div>
                     </Link>
                     <div className="flex-1 min-w-0">
                       <Link href={`/contributors/${first.id}`}>

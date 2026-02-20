@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 import { useAuth } from "@/lib/auth-context";
 import { ContributorAvatar } from "@/components/contributor-avatar";
 import { useQuery } from "@tanstack/react-query";
@@ -110,6 +110,20 @@ function BigFeedItem({ activity }: { activity: ActivityWithUser }) {
             {meta?.topicTitle && (
               <p className="text-sm mt-2 text-muted-foreground">{meta.topicTitle}</p>
             )}
+            {meta?.imageUrl && (
+              <div className="mt-3 rounded-[10px] overflow-hidden bg-muted" data-testid={`img-feed-event-${activity.id}`}>
+                <img
+                  src={meta.imageUrl}
+                  alt={meta?.eventName || "Event"}
+                  className="w-full aspect-video object-cover"
+                />
+              </div>
+            )}
+            {meta?.contentPreview && (
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-3 leading-relaxed">
+                {meta.contentPreview}
+              </p>
+            )}
             {meta?.topicId && (
               <div className="mt-3">
                 <Link href={`/forum/all/${meta.topicId}`}>
@@ -164,7 +178,7 @@ function NotableFeedItem({ activity }: { activity: ActivityWithUser }) {
                 <img
                   src={meta.imageUrl}
                   alt={meta?.eventName || "Event"}
-                  className="w-full h-40 object-cover"
+                  className="w-full aspect-video object-cover"
                 />
               </div>
             )}
@@ -294,7 +308,7 @@ export default function Home() {
                     <Card className={`border-0 shadow-none rounded-[10px] overflow-hidden ${topicId ? "group hover-elevate cursor-pointer" : ""}`} data-testid={`card-event-${event.id}`}>
                       <CardContent className="p-0">
                         {imageUrl && (
-                          <div className="w-full h-36 overflow-hidden bg-muted" data-testid={`img-event-${event.id}`}>
+                          <div className="w-full aspect-video overflow-hidden bg-muted" data-testid={`img-event-${event.id}`}>
                             <img
                               src={imageUrl}
                               alt={meta?.eventName}
@@ -438,11 +452,9 @@ export default function Home() {
                   return (
                     <Link key={member.id} href={`/contributors/${member.id}`}>
                       <div className="flex items-center gap-3 p-2 rounded-md hover-elevate cursor-pointer" data-testid={`sidebar-member-${member.id}`}>
-                        <Avatar className={`w-7 h-7 ${avatarRing}`} style={{ borderRadius: "50%" }}>
-                          <AvatarFallback className="text-xs" style={{ borderRadius: "50%" }}>
-                            {member.username.slice(0, 2).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
+                        <div className={`w-7 h-7 rounded-full overflow-hidden shrink-0 ${avatarRing}`}>
+                          <img src={getAvatarUrl(member.username)} alt={member.username} className="w-full h-full object-cover" />
+                        </div>
                         <span className={`text-sm truncate flex-1 ${nameClass}`}>{member.username}</span>
                         <span className="font-mono text-sm text-muted-foreground tabular-nums shrink-0">
                           {member.totalPoints}
