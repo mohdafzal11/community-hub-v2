@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ArrowLeft, MessageSquare, Send, Reply, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
@@ -48,12 +48,9 @@ function ReplyCard({
       <div className="py-4">
         <div className="flex items-start gap-3">
           <Link href={`/contributors/${reply.authorId}`}>
-            <Avatar className="w-8 h-8 cursor-pointer">
-              {reply.author?.avatarUrl && <AvatarImage src={reply.author.avatarUrl} alt={reply.author.username} />}
-              <AvatarFallback className="text-xs">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+            <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 cursor-pointer">
+              <img src={getAvatarUrl(reply.author?.username || "Anonymous")} alt={reply.author?.username || "Anonymous"} className="w-full h-full object-cover" />
+            </div>
           </Link>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
@@ -194,12 +191,9 @@ export default function ForumTopicPage() {
             <div className="flex items-center gap-3 mb-4 flex-wrap">
               <Link href={`/contributors/${topic.authorId}`}>
                 <div className="flex items-center gap-2 cursor-pointer">
-                  <Avatar className="w-6 h-6">
-                    {topic.author?.avatarUrl && <AvatarImage src={topic.author.avatarUrl} alt={topic.author.username} />}
-                    <AvatarFallback className="text-xs">
-                      {authorInitials}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="w-6 h-6 rounded-full overflow-hidden shrink-0">
+                    <img src={getAvatarUrl(topic.author?.username || "Anonymous")} alt={topic.author?.username || "Anonymous"} className="w-full h-full object-cover" />
+                  </div>
                   <span className="text-sm font-medium">{topic.author?.username ?? "Unknown"}</span>
                 </div>
               </Link>
